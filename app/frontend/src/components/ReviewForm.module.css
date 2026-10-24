@@ -1,0 +1,177 @@
+/* ReviewForm.module.css */
+
+.formCard {
+  background: var(--cream);
+  border: var(--line);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.honeypot {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  width: 0;
+  border: none;
+}
+
+.topRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.aliasCol,
+.ratingCol {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldLabel {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+
+.textareaGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.textareaHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.charCounter {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--pencil);
+}
+
+.counterError {
+  color: var(--tomato);
+  font-weight: 700;
+}
+
+.textarea {
+  width: 100%;
+  border: var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--paper);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  resize: vertical;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.textarea:focus {
+  background: #FFFDF8;
+}
+
+.textareaInvalid {
+  border-color: var(--tomato);
+}
+
+.validationNote {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--pencil);
+}
+
+.errorBox {
+  background: #FFE8E5;
+  border: var(--line);
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--tomato);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.bottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.disclaimer {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--pencil);
+}
+
+.submitBtn {
+  background: var(--cream);
+  border: var(--line);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-pill);
+  padding: 8px 20px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+  transition: transform 0.15s var(--spring), background-color 0.15s ease;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: var(--butter);
+  transform: translateY(-2px);
+}
+
+.submitBtn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Success Card */
+.successCard {
+  background: var(--cream);
+  border: var(--line);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.thumbsUpIcon {
+  margin-bottom: 4px;
+}
+
+.successTitle {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.successSub {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--pencil);
+}

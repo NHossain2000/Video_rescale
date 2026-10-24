@@ -1,0 +1,89 @@
+/* NameTag.module.css */
+
+.tagCard {
+  background: var(--cream);
+  border: var(--line);
+  box-shadow: var(--shadow-sm);
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 280px;
+  transform: rotate(-1deg);
+  transition: transform 0.2s var(--spring);
+}
+
+.wobble {
+  animation: tagWobble 0.35s var(--spring);
+}
+
+@keyframes tagWobble {
+  0% { transform: rotate(-1deg) scale(0.96); }
+  50% { transform: rotate(2deg) scale(1.04); }
+  100% { transform: rotate(-1deg) scale(1); }
+}
+
+.tagHeader {
+  background: var(--tomato);
+  color: #FFFDF8;
+  padding: 4px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+}
+
+.tagSubtitle {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  opacity: 0.9;
+}
+
+.nameRow {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--cream);
+}
+
+.nameText {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.diceBtn {
+  background: var(--paper);
+  border: var(--line);
+  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.15s var(--spring), background 0.15s ease;
+}
+
+.diceBtn:hover {
+  background: var(--butter);
+  transform: rotate(15deg) scale(1.1);
+}
+
+.diceBtn:active {
+  transform: scale(0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wobble {
+    animation: none !important;
+  }
+}

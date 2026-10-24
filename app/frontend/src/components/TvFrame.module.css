@@ -1,0 +1,148 @@
+/* TvFrame.module.css */
+
+.tvFrame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  transform: rotate(-1.5deg);
+  transition: transform 0.3s var(--spring);
+}
+
+.tvFrame:hover {
+  transform: rotate(0deg) scale(1.01);
+}
+
+/* Antenna sticks */
+.antenna {
+  position: relative;
+  width: 90px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.antennaLeft {
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  width: 3px;
+  height: 26px;
+  background: var(--ink);
+  transform: rotate(-32deg);
+  transform-origin: bottom center;
+  border-radius: 2px;
+}
+
+.antennaRight {
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+  width: 3px;
+  height: 26px;
+  background: var(--ink);
+  transform: rotate(32deg);
+  transform-origin: bottom center;
+  border-radius: 2px;
+}
+
+.antennaBase {
+  width: 16px;
+  height: 6px;
+  background: var(--ink);
+  border-radius: 4px 4px 0 0;
+}
+
+/* Cabinet shell */
+.cabinet {
+  display: flex;
+  background: var(--cream);
+  border: var(--line);
+  box-shadow: var(--shadow);
+  border-radius: 20px;
+  padding: 16px;
+  width: 100%;
+  gap: 14px;
+}
+
+/* Screen */
+.screenBezel {
+  flex: 1;
+  background: #EFE9DB;
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 190px;
+  overflow: hidden;
+}
+
+.screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Controls */
+.controls {
+  width: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  padding: 6px 0;
+  border-left: 2px dashed #D6CFBE;
+}
+
+.dialKnob {
+  width: 24px;
+  height: 24px;
+  background: var(--butter);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.dialKnobSmall {
+  width: 18px;
+  height: 18px;
+  background: var(--sky);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.speakerGrill {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 20px;
+}
+
+.speakerGrill span {
+  display: block;
+  height: 2px;
+  background: var(--ink);
+  border-radius: 1px;
+}
+
+.powerPill {
+  width: 10px;
+  height: 10px;
+  background: var(--mint);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tvFrame {
+    transform: none !important;
+  }
+}

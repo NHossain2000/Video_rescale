@@ -1,0 +1,527 @@
+/* App.module.css — Asymmetric Neo-brutalist Notebook Layout */
+
+.appRoot {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Header ───────────────────────────────────────────────────────────────── */
+.header {
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 24px 20px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoBadge {
+  background: var(--butter);
+  border: var(--line);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-pill);
+  padding: 6px 16px;
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+}
+
+.logoTuck {
+  color: var(--ink);
+}
+
+.logoIn {
+  color: var(--tomato);
+}
+
+.brandMascotTag {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--pencil);
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navLink {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  transition: background 0.15s ease;
+}
+
+.navLink:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* ─── Main Asymmetric Layout ───────────────────────────────────────────────── */
+.mainContainer {
+  width: 100%;
+  max-width: 1140px;
+  margin: 20px auto 40px;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 48px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .mainContainer {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* ─── Left Headline Column ─────────────────────────────────────────────────── */
+.headlineCol {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.badgePill {
+  display: inline-block;
+  align-self: flex-start;
+  background: var(--sky);
+  border: var(--line);
+  box-shadow: 2px 2px 0 var(--ink);
+  border-radius: var(--radius-pill);
+  padding: 4px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.mainTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 4.2vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1.05;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+}
+
+.accentUnderline {
+  position: relative;
+  display: inline-block;
+}
+
+.accentUnderline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 2px;
+  width: 100%;
+  height: 8px;
+  background: var(--butter);
+  z-index: -1;
+  border-radius: 4px;
+  transform: rotate(-0.5deg);
+}
+
+.subTitle {
+  font-family: var(--font-body);
+  font-size: 1.25rem;
+  color: var(--pencil);
+  max-width: 420px;
+  line-height: 1.4;
+}
+
+.tuckIntroCard {
+  background: var(--cream);
+  border: var(--line);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transform: rotate(-1deg);
+  margin-top: 12px;
+  max-width: 440px;
+}
+
+.tuckThumb {
+  width: 70px;
+  height: 70px;
+  flex-shrink: 0;
+}
+
+.tuckIntroText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tuckIntroName {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.tuckIntroDesc {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--pencil);
+  line-height: 1.35;
+}
+
+/* ─── Right Tool Card ──────────────────────────────────────────────────────── */
+.toolCard {
+  background: var(--cream);
+  border: var(--line);
+  box-shadow: var(--shadow-lg);
+  border-radius: 22px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+}
+
+@media (max-width: 500px) {
+  .toolCard {
+    padding: 20px 16px;
+  }
+}
+
+/* Error & Cancel Banners */
+.errorBanner {
+  background: #FFE8E5;
+  border: var(--line);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  color: var(--tomato);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.cancelledBanner {
+  background: var(--sky);
+  border: var(--line);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.errorDismissBtn {
+  background: var(--cream);
+  border: var(--line);
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--ink);
+}
+
+/* ─── Screen 1: Drop ───────────────────────────────────────────────────────── */
+.screenDrop {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* THE SINGLE PRIMARY ACTION BUTTON (TOMATO) */
+.primaryTomatoBtn {
+  background: var(--tomato);
+  color: #FFFDF8;
+  border: var(--line);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius-pill);
+  padding: 16px 32px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.25rem;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  letter-spacing: -0.01em;
+  transition: transform 0.15s var(--spring), box-shadow 0.15s var(--spring);
+}
+
+.primaryTomatoBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.primaryTomatoBtn:active:not(:disabled) {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.primaryTomatoBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+/* ─── Screen 2: Squeezing ──────────────────────────────────────────────────── */
+.screenSqueezing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+}
+
+.rotatingStatus {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--pencil);
+  text-align: center;
+  min-height: 1.6rem;
+}
+
+.cancelLink {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--pencil);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+.cancelLink:hover {
+  color: var(--tomato);
+}
+
+/* ─── Screen 3: Done ───────────────────────────────────────────────────────── */
+.screenDone {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.doneTrophyHeader {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.trophyWrapper {
+  width: 90px;
+  height: 90px;
+  flex-shrink: 0;
+}
+
+.doneHeadlineBox {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.doneHeadline {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.doneSubhead {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--pencil);
+}
+
+/* Giant DM Mono Countdown row */
+.metricsRow {
+  background: var(--paper);
+  border: var(--line);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: visible;
+}
+
+.sizeMetric {
+  display: flex;
+  flex-direction: column;
+}
+
+.sizeLabel {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--pencil);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sizeValueOld {
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--pencil);
+  text-decoration: line-through;
+}
+
+.sizeValueOld small {
+  font-size: 0.85rem;
+}
+
+.sizeArrow {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.sizeValueNew {
+  font-family: var(--font-mono);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.sizeValueNew small {
+  font-size: 1rem;
+}
+
+/* Burst Sticker */
+.burstSticker {
+  position: absolute;
+  top: -12px;
+  right: -10px;
+  background: var(--butter);
+  border: var(--line);
+  box-shadow: 2px 2px 0 var(--ink);
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: rotate(8deg);
+  animation: burstFloat 2s ease-in-out infinite alternate;
+}
+
+@keyframes burstFloat {
+  0% { transform: rotate(8deg) translateY(0); }
+  100% { transform: rotate(6deg) translateY(-4px); }
+}
+
+.burstPct {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.burstLabel {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+  color: var(--tomato);
+}
+
+.doneActionsRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.tuckAnotherBtn {
+  background: var(--cream);
+  border: var(--line);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-pill);
+  padding: 14px 20px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink);
+  white-space: nowrap;
+  transition: transform 0.15s var(--spring);
+}
+
+.tuckAnotherBtn:hover {
+  background: var(--paper);
+  transform: translateY(-2px);
+}
+
+.tuckAnotherBtn:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.expiryNote {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--pencil);
+  text-align: center;
+}
+
+/* ─── Footer ───────────────────────────────────────────────────────────────── */
+.footer {
+  margin-top: auto;
+  border-top: var(--line);
+  background: var(--cream);
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.footerPrivacyStatement {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--pencil);
+  max-width: 680px;
+  line-height: 1.45;
+}
+
+.footerTagline {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .burstSticker {
+    animation: none !important;
+  }
+}

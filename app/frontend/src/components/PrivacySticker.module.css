@@ -1,0 +1,99 @@
+/* PrivacySticker.module.css */
+
+.container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.stickerBtn {
+  background: var(--mint);
+  border: var(--line);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ink);
+  transition: transform 0.15s var(--spring);
+}
+
+.stickerBtn:hover {
+  transform: translateY(-2px);
+}
+
+.stickerBtn:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.badgeText {
+  letter-spacing: 0.02em;
+}
+
+.stampRotated {
+  transform: rotate(-6deg);
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* Disclosure Popover */
+.popover {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  width: 320px;
+  background: var(--cream);
+  border: var(--line);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  padding: 16px;
+  z-index: 100;
+  animation: popIn 0.2s var(--spring);
+}
+
+@keyframes popIn {
+  0% { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.popoverHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.popoverTitle {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.closeBtn {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--pencil);
+  padding: 2px 6px;
+}
+
+.closeBtn:hover {
+  color: var(--ink);
+}
+
+.statementText {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--ink);
+  line-height: 1.45;
+}

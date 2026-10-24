@@ -1,0 +1,170 @@
+/* DropZone.module.css */
+
+.wrapper {
+  width: 100%;
+}
+
+.dropZone {
+  border: 2.5px dashed var(--ink);
+  background: var(--cream);
+  border-radius: var(--radius);
+  padding: 36px 20px;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: transform 0.25s var(--spring), background-color 0.2s ease, border-color 0.2s ease;
+  position: relative;
+}
+
+.dropZone:hover {
+  transform: translateY(-2px);
+  background: #FFFDF5;
+}
+
+/* On Dragover: opens wider and wobbles */
+.dragOver {
+  background: var(--butter);
+  border-color: var(--tomato);
+  transform: scale(1.02);
+  animation: wobble 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes wobble {
+  0% { transform: scale(1.02) rotate(-1deg); }
+  100% { transform: scale(1.02) rotate(1deg); }
+}
+
+.hiddenInput {
+  display: none;
+}
+
+/* Cute vacuum bag face */
+.face {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
+.eye {
+  width: 10px;
+  height: 10px;
+  background: var(--ink);
+  border-radius: 50%;
+}
+
+.mouthOpening {
+  width: 38px;
+  height: 22px;
+  background: var(--ink);
+  border-radius: 0 0 19px 19px;
+  position: relative;
+  overflow: hidden;
+  transition: height 0.2s var(--spring);
+}
+
+.dragOver .mouthOpening {
+  height: 32px;
+}
+
+.mouthTongue {
+  position: absolute;
+  bottom: -4px;
+  left: 10px;
+  width: 18px;
+  height: 14px;
+  background: var(--tomato);
+  border-radius: 50%;
+}
+
+.promptText {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.helpText {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--pencil);
+}
+
+/* File selected sticker chip */
+.selectedCard {
+  background: var(--cream);
+  border: var(--line);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transform: rotate(-0.5deg);
+}
+
+.fileDetails {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  overflow: hidden;
+}
+
+.videoIcon {
+  flex-shrink: 0;
+}
+
+.fileText {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.fileName {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+
+.fileSize {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--pencil);
+}
+
+.removeBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: var(--line);
+  background: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--ink);
+  transition: transform 0.15s ease, background 0.15s ease;
+  flex-shrink: 0;
+}
+
+.removeBtn:hover {
+  background: var(--tomato);
+  color: #FFFDF8;
+  transform: scale(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dragOver {
+    animation: none !important;
+  }
+}

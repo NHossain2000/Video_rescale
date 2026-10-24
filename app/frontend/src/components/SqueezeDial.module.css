@@ -1,0 +1,89 @@
+/* SqueezeDial.module.css */
+
+.dialCard {
+  background: var(--cream);
+  border: var(--line);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.dialHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dialTitle {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.dialBadge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--butter);
+  border: var(--line);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.segmentedTrack {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: var(--paper);
+  border: var(--line);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+  gap: 4px;
+}
+
+.segmentBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--pencil);
+  transition: all 0.2s var(--spring);
+  border: 2px solid transparent;
+}
+
+.segmentDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--pencil);
+  transition: background 0.2s ease;
+}
+
+.segmentSelected {
+  background: var(--cream);
+  color: var(--ink);
+  font-weight: 700;
+  border-color: var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.segmentSelected .segmentDot {
+  background: var(--tomato);
+}
+
+.dialDesc {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--pencil);
+  line-height: 1.4;
+  margin: 0;
+}

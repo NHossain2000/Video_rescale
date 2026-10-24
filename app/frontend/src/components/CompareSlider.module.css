@@ -1,0 +1,144 @@
+/* CompareSlider.module.css */
+
+.compareWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.compareTitle {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.compareCaption {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--pencil);
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  background: var(--ink);
+  border: var(--line);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  overflow: hidden;
+  user-select: none;
+  cursor: ew-resize;
+}
+
+.afterLayer,
+.beforeLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.videoPlayer {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.badge {
+  position: absolute;
+  top: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  border: var(--line);
+  box-shadow: 2px 2px 0 var(--ink);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.badgeBefore {
+  left: 12px;
+  background: var(--cream);
+  color: var(--ink);
+}
+
+.badgeAfter {
+  right: 12px;
+  background: var(--butter);
+  color: var(--ink);
+}
+
+.unsupportedMsg {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  background: #2A2824;
+  color: #FFFDF8;
+  font-family: var(--font-body);
+}
+
+.unsupportedSub {
+  font-size: 0.8rem;
+  color: #DDD;
+  margin-top: 6px;
+}
+
+/* Draggable handle */
+.sliderHandle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  z-index: 10;
+  cursor: ew-resize;
+}
+
+.handleLine {
+  width: 2px;
+  height: 100%;
+  background: #FFFDF8;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+}
+
+.handleButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 38px;
+  height: 38px;
+  background: var(--butter);
+  border: var(--line);
+  border-radius: 50%;
+  box-shadow: 2px 2px 0 var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-size: 0.65rem;
+  color: var(--ink);
+}
+
+.sliderHandle:focus-visible .handleButton {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
