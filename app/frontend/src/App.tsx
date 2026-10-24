@@ -109,12 +109,29 @@ export const App: React.FC = () => {
               const baseName = state.file!.name.replace(/\.[^/.]+$/, '');
               const outFilename = payload.output_filename ?? `${baseName}_compressed.mp4`;
               const safeName = outFilename.endsWith('.mp4') ? outFilename : `${outFilename}.mp4`;
-              dispatch({
-                type: 'PROCESSING_SUCCESS',
-                outputSizeMb: payload.output_size_mb ?? targetMaxMb,
-                outputFilename: safeName,
-                downloadUrl: getDownloadUrl(uploadRes.job_id, safeName)
-              });
+              const httpDownloadUrl = getDownloadUrl(uploadRes.job_id, safeName);
+              const httpPreviewUrl = getPreviewUrl(uploadRes.job_id, safeName);
+
+              // Pre-fetch local blob for zero-latency, cross-origin-safe preview and downloads
+              (async () => {
+                let activeDownloadUrl = httpDownloadUrl;
+                try {
+                  const previewRes = await fetch(httpPreviewUrl);
+                  if (previewRes.ok) {
+                    const blob = await previewRes.blob();
+                    activeDownloadUrl = URL.createObjectURL(blob);
+                  }
+                } catch {
+                  // fallback to direct HTTP URL
+                }
+
+                dispatch({
+                  type: 'PROCESSING_SUCCESS',
+                  outputSizeMb: payload.output_size_mb ?? targetMaxMb,
+                  outputFilename: safeName,
+                  downloadUrl: activeDownloadUrl
+                });
+              })();
               closeStream();
             } else if (payload.status === 'error') {
               dispatch({
@@ -391,36 +408,62 @@ export const App: React.FC = () => {
               <CompareSlider
                 originalUrl={state.fileUrl}
                 compressedUrl={
-                  state.jobId
-                    ? getPreviewUrl(state.jobId, state.outputFilename || undefined)
-                    : currentDownloadUrl
+                  (state.downloadUrl && state.downloadUrl.startsWith('blob:'))
+                    ? state.downloadUrl
+                    : (state.jobId
+                        ? getPreviewUrl(state.jobId, state.outputFilename || undefined)
+                        : currentDownloadUrl)
                 }
               />
 
               {/* Single Tomato Action: Download */}
               <div className={styles.doneActionsRow}>
-                <a
-                  href={currentDownloadUrl}
-                  download={state.outputFilename || 'compressed_video.mp4'}
-                  onClick={(e) => {
+                <button
+                  type="button"
+                  className={styles.primaryTomatoBtn}
+                  onClick={async () => {
                     const filename = state.outputFilename?.endsWith('.mp4')
                       ? state.outputFilename
                       : `${state.outputFilename || 'compressed_video'}.mp4`;
 
-                    if (currentDownloadUrl.startsWith('blob:')) {
-                      e.preventDefault();
+                    // 1. Direct blob download
+                    if (state.downloadUrl && state.downloadUrl.startsWith('blob:')) {
                       const tempA = document.createElement('a');
-                      tempA.href = currentDownloadUrl;
+                      tempA.href = state.downloadUrl;
                       tempA.download = filename;
                       document.body.appendChild(tempA);
                       tempA.click();
                       document.body.removeChild(tempA);
+                      return;
+                    }
+
+                    // 2. HTTP download — fetch as blob to bypass cross-origin browser download restrictions
+                    try {
+                      const targetUrl = state.downloadUrl && state.downloadUrl !== '#'
+                        ? state.downloadUrl
+                        : (state.jobId ? getDownloadUrl(state.jobId, filename) : '');
+                      if (!targetUrl) return;
+
+                      const res = await fetch(targetUrl);
+                      if (!res.ok) throw new Error(`Download request failed (${res.status})`);
+                      const blob = await res.blob();
+                      const blobUrl = URL.createObjectURL(blob);
+                      const tempA = document.createElement('a');
+                      tempA.href = blobUrl;
+                      tempA.download = filename;
+                      document.body.appendChild(tempA);
+                      tempA.click();
+                      document.body.removeChild(tempA);
+                      setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+                    } catch {
+                      // 3. Fallback
+                      const fallbackUrl = state.jobId ? getDownloadUrl(state.jobId, filename) : currentDownloadUrl;
+                      window.open(fallbackUrl, '_blank');
                     }
                   }}
-                  className={styles.primaryTomatoBtn}
                 >
                   {COPY.done.download}
-                </a>
+                </button>
 
                 <button
                   type="button"

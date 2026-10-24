@@ -92,9 +92,9 @@ app = FastAPI(title="Tuckin API", version="1.0.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ORIGINS,
-    allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
+    allow_methods=["GET", "POST", "DELETE", "OPTIONS", "HEAD"],
     allow_headers=["*"],
-    expose_headers=["Content-Disposition"],
+    expose_headers=["Content-Disposition", "Content-Range", "Accept-Ranges", "Content-Length"],
 )
 
 
@@ -118,7 +118,7 @@ SUPPORTED_VIDEO_EXTENSIONS = {
 }
 
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 def health():
     return {"status": "ok", "jobs_active": len(jobs)}
 
@@ -398,8 +398,8 @@ def get_status(job_id: str):
     }
 
 
-@app.get("/api/download/{job_id}")
-@app.get("/api/download/{job_id}/{filename}")
+@app.api_route("/api/download/{job_id}", methods=["GET", "HEAD"])
+@app.api_route("/api/download/{job_id}/{filename}", methods=["GET", "HEAD"])
 def download_file(job_id: str, filename: Optional[str] = None):
     job = _get_job(job_id)
     if job["status"] != "done":
@@ -421,14 +421,13 @@ def download_file(job_id: str, filename: Optional[str] = None):
     return FileResponse(
         path=output_path,
         media_type="video/mp4",
-        filename=download_name,
         headers={"Content-Disposition": cd_header},
     )
 
 
 
-@app.get("/api/preview/{job_id}")
-@app.get("/api/preview/{job_id}/{filename}")
+@app.api_route("/api/preview/{job_id}", methods=["GET", "HEAD"])
+@app.api_route("/api/preview/{job_id}/{filename}", methods=["GET", "HEAD"])
 def preview_file(job_id: str, filename: Optional[str] = None):
     job = _get_job(job_id)
     if job["status"] != "done":

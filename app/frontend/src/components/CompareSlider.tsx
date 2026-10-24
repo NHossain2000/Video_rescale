@@ -15,9 +15,50 @@ export const CompareSlider: React.FC<CompareSliderProps> = ({
   const [sliderPos, setSliderPos] = useState<number>(50); // percentage 0 to 100
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [hasCompressedError, setHasCompressedError] = useState<boolean>(false);
+  const [hasOrigError, setHasOrigError] = useState<boolean>(false);
+  const [resolvedCompUrl, setResolvedCompUrl] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const origVideoRef = useRef<HTMLVideoElement>(null);
   const compVideoRef = useRef<HTMLVideoElement>(null);
+
+  // Automatically resolve HTTP preview URL into a Blob URL for seamless browser playback
+  useEffect(() => {
+    let active = true;
+    let localBlobUrl: string | null = null;
+
+    setHasCompressedError(false);
+
+    if (!compressedUrl) {
+      setResolvedCompUrl(null);
+      return;
+    }
+
+    if (compressedUrl.startsWith('blob:') || compressedUrl.startsWith('data:')) {
+      setResolvedCompUrl(compressedUrl);
+      return;
+    }
+
+    fetch(compressedUrl)
+      .then((res) => {
+        if (!res.ok) throw new Error(`Preview fetch failed (${res.status})`);
+        return res.blob();
+      })
+      .then((blob) => {
+        if (!active) return;
+        localBlobUrl = URL.createObjectURL(blob);
+        setResolvedCompUrl(localBlobUrl);
+      })
+      .catch(() => {
+        if (active) setResolvedCompUrl(compressedUrl);
+      });
+
+    return () => {
+      active = false;
+      if (localBlobUrl) {
+        URL.revokeObjectURL(localBlobUrl);
+      }
+    };
+  }, [compressedUrl]);
 
   // Sync video play/pause
   const togglePlay = () => {
@@ -76,14 +117,12 @@ export const CompareSlider: React.FC<CompareSliderProps> = ({
     }
   };
 
-  useEffect(() => {
-    setHasCompressedError(false);
-  }, [compressedUrl]);
-
-  // If neither URL is provided, honestly do not render
+  // If neither URL is provided, do not render
   if (!originalUrl || !compressedUrl) {
     return null;
   }
+
+  const activeCompSrc = resolvedCompUrl || compressedUrl;
 
   return (
     <div className={styles.compareWrapper}>
@@ -103,11 +142,12 @@ export const CompareSlider: React.FC<CompareSliderProps> = ({
           {!hasCompressedError ? (
             <video
               ref={compVideoRef}
-              src={compressedUrl}
+              src={activeCompSrc}
               autoPlay
               loop
               muted
               playsInline
+              crossOrigin="anonymous"
               onError={() => setHasCompressedError(true)}
               className={styles.videoPlayer}
             />
@@ -125,23 +165,26 @@ export const CompareSlider: React.FC<CompareSliderProps> = ({
         </div>
 
         {/* Original / Before Video (Clipped layer) */}
-        <div
-          className={styles.beforeLayer}
-          style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}
-        >
-          <video
-            ref={origVideoRef}
-            src={originalUrl}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className={styles.videoPlayer}
-          />
-          <span className={`${styles.badge} ${styles.badgeBefore}`}>
-            {COPY.done.originalLabel}
-          </span>
-        </div>
+        {!hasOrigError && (
+          <div
+            className={styles.beforeLayer}
+            style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}
+          >
+            <video
+              ref={origVideoRef}
+              src={originalUrl}
+              autoPlay
+              loop
+              muted
+              playsInline
+              onError={() => setHasOrigError(true)}
+              className={styles.videoPlayer}
+            />
+            <span className={`${styles.badge} ${styles.badgeBefore}`}>
+              {COPY.done.originalLabel}
+            </span>
+          </div>
+        )}
 
         {/* Draggable Divider Handle */}
         <div
