@@ -103,13 +103,14 @@ npm run dev
 
 ---
 
-## 🌐 100% Free Production Hosting (Vercel + Render)
+## 🌐 100% Free Production Hosting (Vercel + Render + UptimeRobot)
 
-Tuckin is architected to deploy for **$0/month** on industry-standard infrastructure with zero CORS surprises:
-- **Frontend**: [Vercel](https://vercel.com) (Edge CDN, SharedArrayBuffer headers preconfigured)
-- **Backend**: [Render](https://render.com) (Free Docker service with native multi-threaded FFmpeg & SQLite3)
+Tuckin is architected to deploy for **$0/month** on industry-standard infrastructure with zero cold starts:
+- **Frontend**: [Vercel](https://vercel.com) (Edge CDN, SharedArrayBuffer headers pre-configured)
+- **Backend**: [Render](https://render.com) (Free Docker container with native multi-threaded FFmpeg & SQLite3)
+- **Keep-Alive Bot**: [UptimeRobot](https://uptimerobot.com) (Free 10-minute ping keeping your backend awake 24/7 with zero cold starts)
 
-👉 **Read the step-by-step guide in [HOSTING.md](HOSTING.md)** for copy-paste instructions, environment variables, and pre-configured CORS/CORP headers.
+👉 **Read the complete step-by-step guide in [HOSTING.md](HOSTING.md)** for copy-paste instructions, environment variables, pre-configured CORS/CORP headers, and Railway alternative.
 
 ---
 
