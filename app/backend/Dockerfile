@@ -10,8 +10,8 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY compressor.py main.py ./
-RUN mkdir -p /tmp/videopress_jobs && chown appuser /tmp/videopress_jobs
+COPY compressor.py main.py db.py ./
+RUN mkdir -p /tmp/videopress_jobs /app/data && chown -R appuser /tmp/videopress_jobs /app/data
 
 USER appuser
 ENV PORT=8000

@@ -103,6 +103,16 @@ npm run dev
 
 ---
 
+## 🌐 100% Free Production Hosting (Vercel + Render)
+
+Tuckin is architected to deploy for **$0/month** on industry-standard infrastructure with zero CORS surprises:
+- **Frontend**: [Vercel](https://vercel.com) (Edge CDN, SharedArrayBuffer headers preconfigured)
+- **Backend**: [Render](https://render.com) (Free Docker service with native multi-threaded FFmpeg & SQLite3)
+
+👉 **Read the step-by-step guide in [HOSTING.md](HOSTING.md)** for copy-paste instructions, environment variables, and pre-configured CORS/CORP headers.
+
+---
+
 ## 🧪 Verification & Testing
 
 Tuckin includes an automated end-to-end QA verification suite covering 30 real-world edge cases (surround sound downmix, 10-bit HEVC, 1.8 GB movie streaming, odd dimensions, and memory safety):
