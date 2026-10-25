@@ -160,3 +160,62 @@ def test_job_cancellation_and_process_termination(client: TestClient, sample_vid
     # Verify job is gone from status
     status_res = client.get(f"/api/status/{jid}")
     assert status_res.status_code == 404
+
+
+def test_reviews_sqlite_top_6_and_view_all(client: TestClient):
+    """Verify SQLite database returns top 6 comments by default and all comments with show_all."""
+    res = client.get("/api/reviews")
+    assert res.status_code == 200
+    data = res.json()
+    assert "items" in data
+    assert "total_count" in data
+    assert "average_rating" in data
+    assert data["total_count"] >= 8
+    # Default without view all should return at most 6 items
+    assert len(data["items"]) <= 6
+    assert data["showing_all"] is False
+
+    # Check that reviews are sorted by highest rating first
+    ratings = [item["rating"] for item in data["items"]]
+    assert ratings == sorted(ratings, reverse=True)
+
+    # Now request view all
+    res_all = client.get("/api/reviews?show_all=true")
+    assert res_all.status_code == 200
+    data_all = res_all.json()
+    assert len(data_all["items"]) == data_all["total_count"]
+    assert data_all["showing_all"] is True
+
+
+def test_create_review_validation_and_honeypot(client: TestClient):
+    """Verify spam honeypot and input validation on review submission."""
+    # Honeypot filled -> 400
+    spam_res = client.post(
+        "/api/reviews",
+        json={"display_name": "Bot", "rating": 5, "text": "Genuine text here", "hp_field": "spambot"}
+    )
+    assert spam_res.status_code == 400
+    assert "Spam check" in spam_res.json()["detail"]
+
+    # Text too short (< 10) -> 400
+    short_res = client.post(
+        "/api/reviews",
+        json={"display_name": "User", "rating": 5, "text": "Short"}
+    )
+    assert short_res.status_code == 400
+
+    # Valid review -> 200 and persisted in SQLite
+    create_res = client.post(
+        "/api/reviews",
+        json={"display_name": "Happy Badger", "rating": 5, "text": "This app is astonishingly fast and private!"}
+    )
+    assert create_res.status_code == 200
+    created = create_res.json()
+    assert created["display_name"] == "Happy Badger"
+    assert created["rating"] == 5
+
+    # Check that review count incremented in GET /api/reviews
+    get_res = client.get("/api/reviews")
+    assert get_res.status_code == 200
+    assert get_res.json()["total_count"] >= 9
+

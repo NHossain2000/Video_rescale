@@ -1,4 +1,4 @@
-// ReviewWall.tsx — Honest review wall with summary strip and cursor pagination
+// ReviewWall.tsx — Honest review wall with SQLite top-6 highest rated comments and View All toggle
 import React, { useState, useEffect } from 'react';
 import { reviewsApi, type ReviewItem } from '../api/reviews';
 import { ReviewCard } from './ReviewCard';
@@ -8,57 +8,46 @@ import styles from './ReviewWall.module.css';
 
 export const ReviewWall: React.FC = () => {
   const [reviews, setReviews] = useState<ReviewItem[]>([]);
-  const [nextCursor, setNextCursor] = useState<string | undefined>(undefined);
   const [totalCount, setTotalCount] = useState<number>(0);
   const [averageRating, setAverageRating] = useState<number>(0);
+  const [isShowingAll, setIsShowingAll] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
+  const [isLoadingToggle, setIsLoadingToggle] = useState<boolean>(false);
   const [showForm, setShowForm] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const loadInitialReviews = async () => {
-    setIsLoading(true);
-    setErrorMsg(null);
+  const fetchReviews = async (showAll: boolean) => {
     try {
-      const res = await reviewsApi.getReviews(undefined, 6);
+      const res = await reviewsApi.getReviews(showAll, 6);
       setReviews(res.items);
-      setNextCursor(res.next_cursor);
       setTotalCount(res.total_count);
       setAverageRating(res.average_rating);
+      setIsShowingAll(showAll);
     } catch {
-      setErrorMsg('Could not load reviews. Click to retry.');
-    } finally {
-      setIsLoading(false);
+      setErrorMsg('Could not load reviews from database. Click to retry.');
     }
+  };
+
+  const loadInitial = async () => {
+    setIsLoading(true);
+    setErrorMsg(null);
+    await fetchReviews(false);
+    setIsLoading(false);
   };
 
   useEffect(() => {
-    loadInitialReviews();
+    loadInitial();
   }, []);
 
-  const handleLoadMore = async () => {
-    if (!nextCursor || isLoadingMore) return;
-    setIsLoadingMore(true);
-    try {
-      const res = await reviewsApi.getReviews(nextCursor, 6);
-      setReviews((prev) => [...prev, ...res.items]);
-      setNextCursor(res.next_cursor);
-    } catch {
-      // Keep previous reviews
-    } finally {
-      setIsLoadingMore(false);
-    }
+  const handleToggleViewAll = async () => {
+    setIsLoadingToggle(true);
+    await fetchReviews(!isShowingAll);
+    setIsLoadingToggle(false);
   };
 
-  const handleReviewCreated = (newReview: ReviewItem) => {
-    setReviews((prev) => [newReview, ...prev]);
-    setTotalCount((prev) => prev + 1);
-    // Recalculate average
-    setReviews((currentList) => {
-      const sum = currentList.reduce((acc, r) => acc + r.rating, 0);
-      setAverageRating(Math.round((sum / currentList.length) * 10) / 10);
-      return currentList;
-    });
+  const handleReviewCreated = async (newReview: ReviewItem) => {
+    // Re-fetch to get updated rankings and exact database count
+    await fetchReviews(isShowingAll);
     setShowForm(false);
   };
 
@@ -71,14 +60,14 @@ export const ReviewWall: React.FC = () => {
           <p className={styles.subtitle}>{COPY.reviews.wallSubtitle}</p>
         </div>
 
-        {/* Real Summary Strip */}
+        {/* Real Summary Strip — Total comments count in numbers */}
         <div className={styles.summaryStrip}>
-          <div className={styles.summaryItem}>
+          <div className={styles.summaryItem} title="Total verified user reviews stored in database">
             <span className={styles.summaryNum}>{totalCount}</span>
-            <span className={styles.summaryLabel}>Reviews</span>
+            <span className={styles.summaryLabel}>Comments</span>
           </div>
           <div className={styles.summaryDivider} />
-          <div className={styles.summaryItem}>
+          <div className={styles.summaryItem} title="Average rating across all comments">
             <span className={styles.summaryNum}>
               {totalCount > 0 ? averageRating.toFixed(1) : '—'}
             </span>
@@ -95,6 +84,17 @@ export const ReviewWall: React.FC = () => {
         </div>
       </div>
 
+      {/* Filter indicator */}
+      {!isLoading && reviews.length > 0 && (
+        <div className={styles.filterRow}>
+          <span className={styles.filterPill}>
+            {isShowingAll
+              ? `Showing all ${totalCount} comments`
+              : `Showing top ${reviews.length} highest rated comments (out of ${totalCount} total)`}
+          </span>
+        </div>
+      )}
+
       {/* Inline Review Form */}
       {showForm && (
         <div className={styles.formContainer}>
@@ -106,7 +106,7 @@ export const ReviewWall: React.FC = () => {
       {errorMsg && (
         <div className={styles.errorBox}>
           <span>{errorMsg}</span>
-          <button type="button" className={styles.retryBtn} onClick={loadInitialReviews}>
+          <button type="button" className={styles.retryBtn} onClick={loadInitial}>
             Retry
           </button>
         </div>
@@ -138,7 +138,7 @@ export const ReviewWall: React.FC = () => {
         </div>
       )}
 
-      {/* Reviews Grid */}
+      {/* Reviews Grid (Top 6 or All) */}
       {!isLoading && reviews.length > 0 && (
         <div className={styles.grid}>
           {reviews.map((r) => (
@@ -147,16 +147,20 @@ export const ReviewWall: React.FC = () => {
         </div>
       )}
 
-      {/* Pagination: Show More */}
-      {nextCursor && !isLoading && (
-        <div className={styles.loadMoreRow}>
+      {/* View All Button Toggle */}
+      {!isLoading && totalCount > 6 && (
+        <div className={styles.viewAllRow}>
           <button
             type="button"
-            disabled={isLoadingMore}
-            className={styles.loadMoreBtn}
-            onClick={handleLoadMore}
+            disabled={isLoadingToggle}
+            className={styles.viewAllBtn}
+            onClick={handleToggleViewAll}
           >
-            {isLoadingMore ? 'Loading notes...' : COPY.reviews.showMore}
+            {isLoadingToggle
+              ? 'Loading comments...'
+              : isShowingAll
+              ? '↑ Show top 6 comments only'
+              : `↓ View all ${totalCount} comments`}
           </button>
         </div>
       )}

@@ -44,3 +44,10 @@ videopress_jobs/
 scratch/
 test_*.mp4
 sample_*.mp4
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+app/backend/data/
+

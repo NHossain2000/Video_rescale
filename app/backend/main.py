@@ -14,9 +14,11 @@ import aiofiles
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from pydantic import BaseModel
 from sse_starlette.sse import EventSourceResponse
 
 from compressor import compress_default, compress_targeted, probe_video
+from db import init_db, get_reviews_summary, insert_review
 
 import tempfile
 import threading
@@ -78,6 +80,7 @@ def _purge_job(job_id: str) -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    init_db()
     task = asyncio.create_task(_cleanup_loop())
     yield
     task.cancel()
@@ -448,3 +451,33 @@ def preview_file(job_id: str, filename: Optional[str] = None):
 def delete_job(job_id: str):
     _purge_job(job_id)
     return {"deleted": job_id}
+
+
+class CreateReviewRequest(BaseModel):
+    display_name: str
+    rating: int
+    text: str
+    hp_field: Optional[str] = None
+
+
+@app.get("/api/reviews")
+def get_reviews(show_all: bool = False, limit: int = 6):
+    """
+    Returns reviews from SQLite database:
+    - By default (show_all=False): returns up to top 6 highest rated comments.
+    - If show_all=True: returns all comments.
+    - Always returns total_count (in numbers) and overall average_rating.
+    """
+    return get_reviews_summary(show_all=show_all, limit=limit)
+
+
+@app.post("/api/reviews")
+def create_review(req: CreateReviewRequest):
+    """Stores user review into SQLite database."""
+    if req.hp_field and req.hp_field.strip():
+        raise HTTPException(status_code=400, detail="Spam check triggered.")
+    try:
+        review = insert_review(req.display_name, req.rating, req.text)
+        return review
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))

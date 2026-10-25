@@ -192,3 +192,61 @@
   background: var(--butter);
   transform: translateY(-2px);
 }
+
+.filterRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: -6px;
+}
+
+.filterPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--cream);
+  border: var(--line);
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.viewAllRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.viewAllBtn {
+  background: var(--tomato);
+  color: #FFFFFF;
+  border: var(--line);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-pill);
+  padding: 10px 26px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.15s var(--spring), box-shadow 0.15s ease;
+}
+
+.viewAllBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  background: #E8452E;
+}
+
+.viewAllBtn:active {
+  transform: translateY(1px);
+}
+
