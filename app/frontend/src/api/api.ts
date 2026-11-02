@@ -5,7 +5,10 @@ import type {
   SingleStatusResponse
 } from './types';
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/$/, '');
+export const API_BASE = (
+  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.PROD ? 'https://tuckin-backend.onrender.com' : 'http://localhost:8000')
+).replace(/\/$/, '');
 
 export function uploadVideoDirect(
   file: File,
@@ -133,6 +136,7 @@ export function getPreviewUrl(jobId: string, filename?: string): string {
   return `${API_BASE}/api/preview/${encodeURIComponent(jobId)}/${encodeURIComponent(safeName)}`;
 }
 
+// Delete job endpoint
 export async function deleteJob(jobId: string): Promise<void> {
   try {
     await fetch(`${API_BASE}/api/job/${encodeURIComponent(jobId)}`, {

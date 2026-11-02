@@ -273,7 +273,7 @@ export async function compressVideoClient(
       '-b:v', `${videoKbps}k`,
       '-maxrate', `${Math.round(videoKbps * 1.35)}k`,
       '-bufsize', `${Math.round(videoKbps * 2.5)}k`,
-      '-preset', 'veryfast',
+      '-preset', 'ultrafast',
 
       // Ensures compatibility across all players and browsers.
       '-pix_fmt', 'yuv420p',

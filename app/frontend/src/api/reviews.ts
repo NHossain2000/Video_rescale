@@ -1,4 +1,5 @@
 // reviews.ts — Typed client for Tuckin reviews connected to SQLite3 backend
+import { API_BASE } from './api';
 // Includes in-memory fallback for offline/isolated unit testing
 
 export interface ReviewItem {
@@ -82,7 +83,7 @@ export const INITIAL_REVIEWS: ReviewItem[] = [
   }
 ];
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/$/, '');
+
 
 class ReviewsService {
   private fallbackReviews: ReviewItem[] = [...INITIAL_REVIEWS];

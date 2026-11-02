@@ -4,12 +4,14 @@ import {
   compressVideoClient
 } from './services/clientCompressor';
 import {
+  API_BASE,
   uploadVideoDirect,
   startCompression,
   streamProgress,
   getDownloadUrl,
   getPreviewUrl,
   deleteJob
+
 } from './api/api';
 import {
   appReducer,
@@ -32,9 +34,9 @@ import styles from './App.module.css';
 
 async function checkBackendOnline(): Promise<boolean> {
   try {
-    const res = await fetch('http://127.0.0.1:8000/health', {
+    const res = await fetch(`${API_BASE}/health`, {
       method: 'GET',
-      signal: AbortSignal.timeout(1000)
+      signal: AbortSignal.timeout(4000)
     });
     return res.ok;
   } catch {
@@ -103,7 +105,7 @@ export const App: React.FC = () => {
               dispatch({
                 type: 'PROCESSING_PROGRESS',
                 progress: payload.progress,
-                message: payload.message || 'Compressing frames on your CPU…'
+                message: payload.message || 'Compressing with high-speed cloud engine…'
               });
             } else if (payload.status === 'done') {
               const baseName = state.file!.name.replace(/\.[^/.]+$/, '');
