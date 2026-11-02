@@ -84,8 +84,17 @@ export const App: React.FC = () => {
         // 🚀 Native Engine: loopback localhost upload in ~1s, multi-core native FFmpeg (H.264 + faststart)
         dispatch({ type: 'START_UPLOAD' });
 
-        const uploadRes = await uploadVideoDirect(state.file, (fraction) => {
-          dispatch({ type: 'UPLOAD_PROGRESS', progress: fraction });
+        const uploadRes = await uploadVideoDirect(state.file, (data) => {
+          dispatch({
+            type: 'UPLOAD_PROGRESS',
+            progress: data.fraction,
+            telemetry: {
+              loadedMb: data.loadedMb,
+              totalMb: data.totalMb,
+              speedMb: data.speedMb,
+              etaSeconds: data.etaSeconds
+            }
+          });
         });
 
         activeJobIdRef.current = uploadRes.job_id;
@@ -352,6 +361,7 @@ export const App: React.FC = () => {
                     : state.processingProgress
                 }
                 statusMessage={state.statusMessage}
+                uploadTelemetry={state.status === 'uploading' ? state.uploadTelemetry : null}
               />
 
               {/* Rotating friendly status lines */}

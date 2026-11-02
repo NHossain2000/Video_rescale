@@ -11,6 +11,13 @@ export type AppStateStatus =
 
 export type VisualScreen = 'drop' | 'squeezing' | 'done';
 
+export interface UploadTelemetry {
+  loadedMb: number;
+  totalMb: number;
+  speedMb: number;
+  etaSeconds: number;
+}
+
 export interface AppState {
   status: AppStateStatus;
   file: File | null;
@@ -20,6 +27,7 @@ export interface AppState {
   jobId: string | null;
   dial: SqueezeDialStop;
   uploadProgress: number;
+  uploadTelemetry: UploadTelemetry | null;
   processingProgress: number;
   statusMessage: string;
   outputSizeMb: number | null;
@@ -36,6 +44,7 @@ export const INITIAL_STATE: AppState = {
   jobId: null,
   dial: 'regular',
   uploadProgress: 0,
+  uploadTelemetry: null,
   processingProgress: 0,
   statusMessage: '',
   outputSizeMb: null,
@@ -48,7 +57,7 @@ export type AppAction =
   | { type: 'REMOVE_FILE' }
   | { type: 'SET_DIAL'; dial: SqueezeDialStop }
   | { type: 'START_UPLOAD' }
-  | { type: 'UPLOAD_PROGRESS'; progress: number }
+  | { type: 'UPLOAD_PROGRESS'; progress: number; telemetry?: UploadTelemetry }
   | { type: 'UPLOAD_SUCCESS'; response: UploadResponse }
   | { type: 'START_PROCESSING' }
   | { type: 'PROCESSING_PROGRESS'; progress: number; message: string }
@@ -88,6 +97,7 @@ export function appReducer(state: AppState, action: AppAction): AppState {
         ...state,
         status: 'uploading',
         uploadProgress: 0,
+  uploadTelemetry: null,
         processingProgress: 0,
         statusMessage: 'Preparing video file...'
       };
@@ -95,7 +105,8 @@ export function appReducer(state: AppState, action: AppAction): AppState {
     case 'UPLOAD_PROGRESS':
       return {
         ...state,
-        uploadProgress: Math.min(Math.max(action.progress, 0), 1)
+        uploadProgress: Math.min(Math.max(action.progress, 0), 1),
+        uploadTelemetry: action.telemetry ?? state.uploadTelemetry
       };
 
     case 'UPLOAD_SUCCESS':

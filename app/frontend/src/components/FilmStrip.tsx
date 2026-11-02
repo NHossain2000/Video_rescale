@@ -6,6 +6,12 @@ interface FilmStripProps {
   progress: number; // 0.0 to 1.0
   stage: 'uploading' | 'processing';
   statusMessage?: string;
+  uploadTelemetry?: {
+    loadedMb: number;
+    totalMb: number;
+    speedMb: number;
+    etaSeconds: number;
+  } | null;
 }
 
 const TOTAL_CELLS = 10;
@@ -13,7 +19,8 @@ const TOTAL_CELLS = 10;
 export const FilmStrip: React.FC<FilmStripProps> = ({
   progress,
   stage,
-  statusMessage
+  statusMessage,
+  uploadTelemetry
 }) => {
   const p = Math.max(0, Math.min(1, progress));
   const activeCells = Math.round(p * TOTAL_CELLS);
@@ -70,6 +77,27 @@ export const FilmStrip: React.FC<FilmStripProps> = ({
           ))}
         </div>
       </div>
+
+      {/* Upload Telemetry Badge: Live MB, Speed & ETA */}
+      {stage === 'uploading' && uploadTelemetry && uploadTelemetry.totalMb > 0 && (
+        <div className={styles.telemetryStrip} aria-live="polite">
+          <span className={styles.telemetryMetric}>
+            {uploadTelemetry.loadedMb.toFixed(1)} / {uploadTelemetry.totalMb.toFixed(1)} MB
+          </span>
+          <span className={styles.telemetryDivider}>•</span>
+          <span className={styles.telemetryMetric}>
+            {uploadTelemetry.speedMb.toFixed(1)} MB/s
+          </span>
+          {uploadTelemetry.etaSeconds > 0 && (
+            <>
+              <span className={styles.telemetryDivider}>•</span>
+              <span className={styles.telemetryMetric}>
+                ~{uploadTelemetry.etaSeconds}s left
+              </span>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Real-time Status message */}
       {statusMessage && (

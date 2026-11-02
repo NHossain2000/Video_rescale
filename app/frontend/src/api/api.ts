@@ -10,9 +10,17 @@ export const API_BASE = (
   (import.meta.env.PROD ? 'https://tuckin-backend.onrender.com' : 'http://localhost:8000')
 ).replace(/\/$/, '');
 
+export interface UploadProgressData {
+  fraction: number;
+  loadedMb: number;
+  totalMb: number;
+  speedMb: number;
+  etaSeconds: number;
+}
+
 export function uploadVideoDirect(
   file: File,
-  onProgress?: (progressFraction: number) => void
+  onProgress?: (data: UploadProgressData) => void
 ): Promise<UploadResponse> {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -20,10 +28,40 @@ export function uploadVideoDirect(
 
     xhr.open('POST', url, true);
 
+    const startTime = Date.now();
+    let lastLoaded = 0;
+    let lastTime = startTime;
+    let currentSpeedMb = 0;
+
     if (xhr.upload && onProgress) {
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable && event.total > 0) {
-          onProgress(event.loaded / event.total);
+          const now = Date.now();
+          const timeDelta = (now - lastTime) / 1000;
+
+          if (timeDelta >= 0.25) {
+            const bytesDelta = event.loaded - lastLoaded;
+            const instantSpeedMb = (bytesDelta / (1024 * 1024)) / timeDelta;
+            currentSpeedMb = currentSpeedMb === 0 ? instantSpeedMb : (currentSpeedMb * 0.65 + instantSpeedMb * 0.35);
+            lastLoaded = event.loaded;
+            lastTime = now;
+          } else if (currentSpeedMb === 0 && now - startTime > 300) {
+            const elapsed = (now - startTime) / 1000;
+            currentSpeedMb = (event.loaded / (1024 * 1024)) / elapsed;
+          }
+
+          const loadedMb = event.loaded / (1024 * 1024);
+          const totalMb = event.total / (1024 * 1024);
+          const remainingMb = Math.max(0, totalMb - loadedMb);
+          const etaSeconds = currentSpeedMb > 0.05 ? Math.ceil(remainingMb / currentSpeedMb) : 0;
+
+          onProgress({
+            fraction: Math.min(1, Math.max(0, event.loaded / event.total)),
+            loadedMb,
+            totalMb,
+            speedMb: Math.max(0.1, Math.round(currentSpeedMb * 10) / 10),
+            etaSeconds
+          });
         }
       };
     }
