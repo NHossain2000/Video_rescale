@@ -26,12 +26,19 @@ pnpm-debug.log*
 
 # Environment & Secrets
 .env
+.env.*
+!.env.example
 .env.local
 .env.*.local
+*.pem
+*.key
+*.cert
+*.pfx
 
 # Operating System & IDE
 .DS_Store
 Thumbs.db
+desktop.ini
 .idea/
 .vscode/
 *.swp
@@ -51,3 +58,8 @@ sample_*.mp4
 *.sqlite3
 app/backend/data/
 
+# Private & Internal Documentation
+HOSTING.md
+hosting.md
+*.private.*
+docs/private/
