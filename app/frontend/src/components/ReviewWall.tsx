@@ -45,7 +45,7 @@ export const ReviewWall: React.FC = () => {
     setIsLoadingToggle(false);
   };
 
-  const handleReviewCreated = async (newReview: ReviewItem) => {
+  const handleReviewCreated = async () => {
     // Re-fetch to get updated rankings and exact database count
     await fetchReviews(isShowingAll);
     setShowForm(false);
