@@ -208,6 +208,14 @@ export async function compressVideoClient(
     );
   }
 
+  // Web browser memory ceiling: WebAssembly 32-bit address space & JS FileReader cannot address >= 2 GB (2048 MB)
+  const MAX_BROWSER_WASM_BYTES = 2047 * 1024 * 1024;
+  if (file.size >= MAX_BROWSER_WASM_BYTES) {
+    throw new Error(
+      `This file (${(file.size / (1024 * 1024)).toFixed(1)} MB) exceeds the in-browser WebAssembly 2 GB memory ceiling. Files over 2 GB must be compressed using the cloud backend.`
+    );
+  }
+
   // Keep screen awake while processing on mobile.
   await acquireWakeLock();
 
@@ -238,7 +246,17 @@ export async function compressVideoClient(
   const outputName = `output_${Date.now()}.mp4`;
 
   onProgress(0.15, 'Loading video into local memory…');
-  let fileData: Uint8Array | null = await fetchFile(file);
+  let fileData: Uint8Array | null;
+  try {
+    fileData = await fetchFile(file);
+  } catch (err: any) {
+    if (file.size >= MAX_BROWSER_WASM_BYTES || (err?.message && String(err.message).includes('-1'))) {
+      throw new Error(
+        `Browser memory limit exceeded: Files over 2 GB cannot be loaded into browser memory. Please use the cloud backend.`
+      );
+    }
+    throw new Error(`Failed to read file into memory: ${err?.message || 'unknown error'}`);
+  }
   await ffmpeg.writeFile(inputName, fileData);
 
   // Immediately null the JS reference so the GC can reclaim memory before the

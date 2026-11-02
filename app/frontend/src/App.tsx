@@ -153,6 +153,11 @@ export const App: React.FC = () => {
         cancelStreamRef.current = closeStream;
       } else {
         // In-Browser WebAssembly fallback
+        if (state.file.size >= 2047 * 1024 * 1024) {
+          throw new Error(
+            `This file (${(state.file.size / (1024 * 1024)).toFixed(0)} MB) exceeds the in-browser WebAssembly 2 GB memory ceiling. Please ensure your cloud backend is awake and connected to process files over 2 GB.`
+          );
+        }
         dispatch({ type: 'START_PROCESSING' });
 
         const targetRatio = getTargetRatio(state.dial);
